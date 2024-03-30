@@ -15,7 +15,7 @@ namespace IntegrationApps
         }
 
         [Function("HttpExample")]
-        public IActionResult Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")] HttpRequest req, string? name)
+        public IActionResult Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")] HttpRequest req, string name)
         {
             _logger.LogInformation("C# HTTP trigger function processed a request.");
             var message = "Welcome to Azure Functions";

@@ -1,28 +1,31 @@
-﻿using Azure.Messaging.ServiceBus;
+﻿using Azure.Messaging;
+using Azure.Messaging.ServiceBus;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace IntegrationApps
 {
-    public class ServiceBusReceivedMessageFunctions
+    public class ServiceBusReceivedMessageFunctions(ILogger<ServiceBusReceivedMessageFunctions> logger)
     {
-        private readonly ILogger<ServiceBusReceivedMessageFunctions> _logger;
-
-        public ServiceBusReceivedMessageFunctions(ILogger<ServiceBusReceivedMessageFunctions> logger)
-        {
-            _logger = logger;
-        }
-
         [Function(nameof(ServiceBusReceivedMessageFunction))]
-        public string ServiceBusReceivedMessageFunction(
+        [CosmosDBOutput("%CosmosDatabaseName%", "events", Connection = "CosmosDBConnection")]
+        public object ServiceBusReceivedMessageFunction(
             [ServiceBusTrigger("fileupload-dev", Connection = "ServiceBusConnection")] ServiceBusReceivedMessage message)
         {
-            _logger.LogInformation("Message ID: {id}", message.MessageId);
-            _logger.LogInformation("Message Body: {body}", message.Body);
-            _logger.LogInformation("Message Content-Type: {contentType}", message.ContentType);
-
-            var outputMessage = $"Output message created at {DateTime.Now}";
-            return outputMessage;
+            logger.LogInformation("Message ID: {id}", message.MessageId);
+            logger.LogInformation("Message Body: {body}", message.Body);
+            logger.LogInformation("Message Content-Type: {contentType}", message.ContentType);
+            try
+            {
+                var cloudEvent = CloudEvent.Parse(message.Body);
+                return cloudEvent;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
     }
 }

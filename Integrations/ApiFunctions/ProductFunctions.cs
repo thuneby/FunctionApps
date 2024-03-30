@@ -5,11 +5,11 @@ using Microsoft.Extensions.Logging;
 
 namespace ApiFunctions
 {
-    public class Function1
+    public class ProductFunctions
     {
-        private readonly ILogger<Function1> _logger;
+        private readonly ILogger<ProductFunctions> _logger;
 
-        public Function1(ILogger<Function1> logger)
+        public ProductFunctions(ILogger<ProductFunctions> logger)
         {
             _logger = logger;
         }
