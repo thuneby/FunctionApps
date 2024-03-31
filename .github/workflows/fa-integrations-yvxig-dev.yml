@@ -1,8 +1,14 @@
-name: Build and deploy .NET Core application to Function App fa-integrations-yvxig-dev
+name: Build and deploy to Function App
 on:
-  push:
-    branches:
-    - feature/FunctionApps
+  # push:
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Bootstrap environment
+        type: environment
+        required: true
 env:
   AZURE_FUNCTIONAPP_NAME: fa-integrations-yvxig-dev
   AZURE_FUNCTIONAPP_PACKAGE_PATH: IntegrationApps\published
